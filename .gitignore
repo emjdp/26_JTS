@@ -1,0 +1,13 @@
+*
+
+!.gitignore
+!index.html
+!나의진로Plan_발표.html
+!나의진로Plan_발표.pptx
+
+!photo/
+!photo/*.gif
+!photo/*.jpeg
+!photo/*.jpg
+!photo/*.png
+!photo/*.webp
