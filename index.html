@@ -158,7 +158,10 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
    =========================================================== */
 .slide--cover{ grid-template-rows:1fr auto; grid-template-columns:1fr 1fr; gap:0; }
 .cover-headline{ grid-column:1; grid-row:1; display:flex; flex-direction:column; justify-content:flex-start; gap:var(--gap-md); padding-top:var(--gap-sm); }
-.cover-copy{ grid-column:2; grid-row:1; display:flex; flex-direction:column; justify-content:center; padding-left:var(--pad-x); gap:var(--gap-md); }
+.cover-copy{ grid-column:2; grid-row:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding:32px 72px 0 var(--pad-x); gap:20px; }
+.cover-copy::before{ content:""; width:42px; height:2px; background:var(--c-accent); margin-bottom:8px; }
+.cover-intro{ max-width:720px; color:var(--c-fg-2); }
+.cover-field{ max-width:720px; padding-top:18px; border-top:1px solid var(--c-border); font-family:var(--f-mono); font-size:15px; font-weight:500; line-height:1.5; letter-spacing:.1em; text-transform:uppercase; color:var(--c-fg-3); }
 .cover-bottom{ grid-column:1/3; grid-row:2; display:flex; align-items:flex-end; justify-content:space-between; gap:var(--gap-lg); padding-top:var(--gap-md); }
 
 /* STATEMENT — headline left, copy right */
@@ -166,6 +169,7 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
 .slide--statement .slide-body{ display:grid; grid-template-columns:1.05fr 1fr; gap:calc(var(--pad-x)*1.2); align-items:center; min-height:0; }
 .stmt-headline{ display:flex; flex-direction:column; gap:var(--gap-md); min-width:0; }
 .stmt-copy{ display:flex; flex-direction:column; gap:var(--gap-md); min-width:0; }
+.story-copy{ transform:translateY(-34px); }
 
 /* FOCUS / LIST — wide left headline margin, right content column.
    min-width:0 lets the fr tracks honor their proportion instead of being
@@ -246,13 +250,36 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
 .callout-box.accented strong{ color:var(--c-accent); }
 
 /* END — closing, mirrors cover */
-.slide--end{ grid-template-rows:1fr auto; grid-template-columns:1.05fr 1fr; gap:0; }
-.end-main{ grid-column:1; grid-row:1; display:flex; flex-direction:column; justify-content:flex-end; gap:var(--gap-md); }
-.end-side{ grid-column:2; grid-row:1; display:flex; align-items:flex-end; justify-content:flex-end; padding-left:var(--pad-x); }
-.end-foot{ grid-column:1/3; grid-row:2; display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid var(--c-border); padding-top:var(--gap-sm); margin-top:var(--gap-md); }
+.slide--end{ grid-template-rows:1fr auto; grid-template-columns:1.08fr .92fr; gap:0; }
+.end-main{ grid-column:1; grid-row:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:var(--gap-md); padding:20px 72px 40px 0; }
+.end-main .h1{ font-size:108px; }
+.end-main .info-card{ width:600px; max-width:100%; margin-top:8px; padding-top:24px; padding-bottom:24px; }
+.end-foot{ grid-column:1/3; grid-row:2; display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid var(--c-border); padding-top:var(--gap-sm); margin-top:var(--gap-md); position:relative; z-index:2; }
 
-/* Side edge label (cover/end) — rotated mono tag */
-.edge-label{ position:absolute; right:46px; top:50%; transform:translateY(-50%) rotate(90deg); transform-origin:center; font-family:var(--f-mono); font-size:var(--sz-label); letter-spacing:.24em; text-transform:uppercase; color:var(--c-fg-3); z-index:2; }
+/* Marathon photo — right-column full-bleed, editorial tint */
+.slide--end > .marathon-photo{
+  position:absolute; right:0; top:0; bottom:0;
+  width:54%; overflow:hidden; z-index:1;
+  pointer-events:none;
+}
+.marathon-photo img{
+  width:100%; height:100%;
+  object-fit:cover; object-position:center 30%;
+  max-width:none; max-height:none;
+  filter: grayscale(18%) brightness(0.42) sepia(28%) saturate(0.75) hue-rotate(10deg);
+  display:block;
+}
+.marathon-photo::before{
+  content:""; position:absolute; inset:0; z-index:2;
+  background:
+    linear-gradient(to right, var(--c-bg) 0%, rgba(35,46,38,0.55) 32%, transparent 62%),
+    linear-gradient(to top,   var(--c-bg) 0%, transparent 22%);
+}
+.marathon-photo::after{
+  content:""; position:absolute; inset:0; z-index:3;
+  background: radial-gradient(ellipse at 80% 60%, rgba(192,112,48,.13) 0%, transparent 65%);
+  mix-blend-mode: screen;
+}
 
 /* ===========================================================
    REVEAL ANIMATION — subtle staggered rise on the active slide
@@ -295,6 +322,46 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
   .reveal{ opacity:1!important; transform:none!important; }
   #nav-dots,#slide-counter,#progress,.edit-toggle,.edit-hotzone{ display:none!important; }
 }
+
+/* DUAL TIMELINE — 학기별 이수 경로 비교 */
+.slide--dual-tl .slide-body{
+  display:grid; grid-template-columns:1fr 1px 1fr;
+  gap:0; align-items:start; min-height:0; padding-top:4px;
+}
+.dtl-panel{ display:flex; flex-direction:column; gap:0; min-width:0; overflow:hidden; }
+.dtl-panel.left{ padding-right:44px; }
+.dtl-panel.right{ padding-left:44px; }
+.dtl-divider{ background:var(--c-border); width:1px; }
+.dtl-hdr{ display:flex; flex-direction:column; gap:6px;
+  padding-bottom:14px; margin-bottom:12px; border-bottom:1px solid var(--c-border); }
+.dtl-hdr-opt{ font-family:var(--f-mono); font-size:13px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--c-fg-3); }
+.dtl-hdr-opt.main{ color:var(--c-accent); }
+.dtl-hdr-title{ font-family:var(--f-display); font-size:40px; font-weight:800;
+  line-height:1.05; letter-spacing:-.01em; color:var(--c-fg); }
+.dtl-hdr-sub{ font-family:var(--f-body); font-size:16px; color:var(--c-fg-2); line-height:1.4; }
+.dtl-badge{ display:inline-flex; align-self:flex-start;
+  font-family:var(--f-mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+  padding:4px 10px; margin-top:4px; background:var(--c-fg); color:var(--c-fg-light); }
+.dtl-badge.accent{ background:var(--c-accent); color:#fff; }
+.dtl-tl{ display:flex; flex-direction:column; gap:0;
+  border-left:1.5px solid var(--c-border); padding-left:20px; }
+.dtl-row{ display:grid; grid-template-columns:76px 1fr; gap:12px;
+  padding:6px 0; align-items:flex-start; position:relative; }
+.dtl-row::before{ content:""; position:absolute; left:-26px; top:15px;
+  width:6px; height:6px; border-radius:50%; background:rgba(240,232,210,.20); }
+.dtl-row.army{ opacity:.42; }
+.dtl-row.key::before{ background:var(--c-accent); width:8px; height:8px; left:-27px; top:14px; }
+.dtl-row-yr{ font-family:var(--f-mono); font-size:13.5px; font-weight:500;
+  letter-spacing:.06em; color:var(--c-fg-3); padding-top:3px; white-space:nowrap; }
+.dtl-row.key .dtl-row-yr{ color:var(--c-accent); }
+.dtl-row-body{ display:flex; flex-direction:column; gap:3px; }
+.dtl-row-body strong{ font-family:var(--f-body); font-size:18px; font-weight:600;
+  color:var(--c-fg); line-height:1.25; }
+.dtl-row-body span{ font-family:var(--f-body); font-size:14.5px; color:var(--c-fg-2); line-height:1.35; }
+.dtl-row-body .ms{ font-family:var(--f-mono); font-size:12.5px;
+  letter-spacing:.06em; color:var(--c-accent); margin-top:3px; }
+.dtl-row-body .add{ color:rgba(192,112,48,.75); font-style:italic; }
 </style>
 </head>
 <body>
@@ -309,20 +376,19 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
         <h1 class="display reveal">진로<br>Plan</h1>
       </div>
       <div class="cover-copy">
-        <p class="lead reveal" style="color:var(--c-fg-2); max-width:90%;">
+        <p class="lead cover-intro reveal">
           만든 것이 누군가의 손으로 넘어가는 순간이 좋았다.<br>
           그 감각을 로봇으로 이어 가는 4년의 설계.
         </p>
-        <p class="caption reveal" style="color:var(--c-fg-3);">Human-centered Embodied Robotics</p>
+        <p class="cover-field reveal">Human-Robot Interaction (HRI)<br>&amp; Embodied Robotics</p>
       </div>
       <div class="cover-bottom">
         <div class="info-card reveal">
           <div class="info-card-heading">박성호 · Park Seongho</div>
-          <div class="info-card-body">소프트웨어융합학과<br>관심: 로봇 제어 · 임베디드 · 범용 휴머노이드</div>
+          <div class="info-card-body">소프트웨어융합학과<br>관심: 로봇 제어 · 동역학 · 범용 휴머노이드</div>
         </div>
         <span class="label muted reveal">진로 설계 발표 · 2026</span>
       </div>
-      <span class="edge-label">Career Plan</span>
     </section>
 
     <!-- ═══ 02 · STATEMENT — 동기 / 시작점 ═══════════════════════ -->
@@ -345,7 +411,7 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
           <span class="kicker reveal">시작점 · WHY ROBOTICS</span>
           <h2 class="h1 reveal">만들고,<br>누군가<br>써 보는 일.</h2>
         </div>
-        <div class="stmt-copy">
+        <div class="stmt-copy story-copy">
           <p class="lead muted reveal">
             전동 보드, 추적 로봇, 작은 웹 서비스를 만들어 왔다. 완성도보다
             '사람들의 손으로 넘어가는 순간'이 좋아서 계속 만들었고, 그 감각을
@@ -354,7 +420,7 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
           <ul class="bullet-list reveal">
             <li>직접 설계하고 만드는 하드웨어·소프트웨어에 끌린다</li>
             <li>제어와 SW를 함께 다루는 소융의 커리큘럼이 내 방향과 맞았다</li>
-            <li>로봇 제어와 임베디드를 더 깊이 알고 싶다</li>
+            <li>로봇의 움직임을 설계하는 제어·동역학·메카트로닉스를 더 깊이 공부하고 싶다</li>
           </ul>
         </div>
       </div>
@@ -370,7 +436,7 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
         <div class="list-head">
           <span class="kicker reveal">관심 분야</span>
           <h2 class="h2 reveal">사람 곁에서<br>움직이는 로봇.</h2>
-          <p class="lead muted reveal">Human-centered Embodied Robotics &amp; General-Purpose Humanoid — 제어·임베디드·비전을 묶어 '실제로 동작하는 로봇'을 만드는 분야.</p>
+          <p class="lead muted reveal"><strong>HRI (Human-Robot Interaction)</strong> — 로봇이 사람을 이해하고 자연스럽게 상호작용하는 방법을 연구하는 분야.<br><strong>범용 휴머노이드</strong> — 제어·임베디드·비전 기술을 융합해 다양한 환경과 작업에 대응하는 인간형 로봇을 개발하는 분야.</p>
         </div>
         <div class="list-items">
           <span class="label accent reveal" style="margin-bottom:6px;">지금 하고 있는 것</span>
@@ -410,13 +476,13 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
           </div>
           <div class="phase">
             <div class="phase-yr">20<em>27</em></div>
-            <div class="phase-t">입대 · 복학</div>
+            <div class="phase-t">입대</div>
             <div class="phase-d">전역 후 2학기 칼복학, 학업 복귀</div>
           </div>
           <div class="phase">
             <div class="phase-yr">28–<em>31</em></div>
-            <div class="phase-t">이중전공 · 연구</div>
-            <div class="phase-d">소융+기계 이중전공을 학부연구생과 함께 진행</div>
+            <div class="phase-t">다전공 · 연구</div>
+            <div class="phase-d">다전공을 학부연구생과 함께 진행</div>
           </div>
           <div class="phase">
             <div class="phase-yr">31<em>~</em></div>
@@ -431,16 +497,197 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
       </footer>
     </section>
 
-    <!-- ═══ 05 · 전공 선택 분기 로드맵 ═══════════════════════════ -->
+    <!-- ═══ 05 · 진로 계획 — 두 개의 다전공 전략 ═════════════════ -->
+    <section class="slide dark slide--compare">
+      <header class="slide-chrome">
+        <span class="label muted">② 진로 계획 · 다전공 전략</span>
+        <span class="label muted">05</span>
+      </header>
+      <div class="slide-body">
+        <div class="compare-panel left">
+          <div class="compare-label after reveal">다전공 ① · 기계공학부</div>
+          <h3 class="h3 reveal">지능형로봇공학</h3>
+          <p class="lead muted reveal">소융 로봇·비전트랙보다 제어·로봇을 더 <b>깊고 넓게</b> 다룰 수 있어, 관심 분야 공부·연구의 폭을 키워 준다.</p>
+          <ul class="bullet-list tight reveal">
+            <li>소융 로봇·비전과 <b>27학점 중복</b> → 추가 이수는 <b>24학점뿐</b></li>
+            <li>기계과 교수 두 분 면담 — “제어를 할 거면 하는 게 유리하다”</li>
+          </ul>
+        </div>
+        <div class="compare-divider-line"></div>
+        <div class="compare-panel right">
+          <div class="compare-label reveal">다전공 ② · 융합전공</div>
+          <h3 class="h3 reveal">H-STEM 융합전공</h3>
+          <p class="lead muted reveal">“독창적 연구 역량 및 <b>대학원 진학 준비</b> 지원”에 중점을 둔 전공. 다전공으로만 이수 가능하며 33학점.</p>
+          <ul class="bullet-list tight reveal">
+            <li>소융·기계와 약 <b>12학점 중복</b> 예상 · <b>PBL 프로젝트 2개로 졸업논문 대체</b></li>
+            <li>학과장·담당 교수 면담 — 전공선택 전부 <b>절대평가</b></li>
+            <li>대학원 진학 예정 — 연구 역량을 키우고 다양한 분야로 <b>시야 확장</b></li>
+          </ul>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span class="label muted">박성호 · 진로 설계</span>
+        <span class="label muted">진로 계획 — 다전공 전략</span>
+      </footer>
+    </section>
+
+    <!-- ═══ 06 · 학기별 이수 타임라인 — 이중전공 vs 삼중전공 ════════ -->
+    <section class="slide dark slide--dual-tl">
+      <header class="slide-chrome">
+        <span class="label muted">② 진로 계획 · 학기별 타임라인</span>
+        <span class="label muted">06</span>
+      </header>
+      <div class="slide-body">
+
+        <!-- ── LEFT: 이중전공 ──────────────────────────────────── -->
+        <div class="dtl-panel left">
+          <div class="dtl-hdr reveal">
+            <span class="dtl-hdr-opt main">Option A · 메인 루트</span>
+            <div class="dtl-hdr-title">이중전공</div>
+            <div class="dtl-hdr-sub">소융 본전공 (로봇·비전트랙) + 기계 다전공 (지능로봇공학) · 전공 102학점</div>
+            <span class="dtl-badge accent">2031 봄 졸업 · 초과학기 없음</span>
+          </div>
+          <div class="dtl-tl reveal">
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2026</div>
+              <div class="dtl-row-body">
+                <strong>입학 → 입대</strong>
+                <span>미적·선대·물리, 소융개론·객체지향·웹/파이썬, 일반화학</span>
+                <span class="ms">누적 49학점 · 입대</span>
+              </div>
+            </div>
+            <div class="dtl-row army">
+              <div class="dtl-row-yr">2027</div>
+              <div class="dtl-row-body">
+                <strong>군복무</strong>
+                <span>학점 동결</span>
+                <span>옵션 · 군 e-러닝 (9학점)</span>
+              </div>
+            </div>
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2028</div>
+              <div class="dtl-row-body">
+                <strong>복학 — 전공 기초</strong>
+                <span>자료구조·확률·이산구조·공학수학1·수치해석 / 물리1(계절)</span>
+                <span class="ms">★ 소융전공기초 15/15 완성 · 누적 73학점</span>
+              </div>
+            </div>
+            <div class="dtl-row">
+              <div class="dtl-row-yr">2029</div>
+              <div class="dtl-row-body">
+                <strong>제어 핵심 과목</strong>
+                <span>알고리즘·회로·동역학·소프트웨어공학 / 운영체제·DB·자동제어·시스템동역학</span>
+                <span class="ms">누적 110학점</span>
+              </div>
+            </div>
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2030</div>
+              <div class="dtl-row-body">
+                <strong>캡스톤 · 심화</strong>
+                <span>3D데이터·영상분석·메카트로닉스·로봇공학·딥러닝·기계캡스톤1</span>
+                <span>소융캡스톤·컴퓨터비전·기계캡스톤2·첨단기계실험</span>
+                <span class="ms">★ 소융 + 기계 캡스톤 완료 · 누적 143학점</span>
+              </div>
+            </div>
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2031 봄</div>
+              <div class="dtl-row-body">
+                <strong>졸업논문</strong>
+                <span>소융졸업논문 · 기계졸업논문</span>
+                <span class="ms">🎓 정규 8학기 졸업</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dtl-divider"></div>
+
+        <!-- ── RIGHT: 삼중전공 ─────────────────────────────────── -->
+        <div class="dtl-panel right">
+          <div class="dtl-hdr reveal">
+            <span class="dtl-hdr-opt">Option B · 확장 선택지</span>
+            <div class="dtl-hdr-title">삼중전공</div>
+            <div class="dtl-hdr-sub">소융 + 기계 + h-STEM 융합전공 · 전공 135학점 (2029년에 최종 결정)</div>
+            <span class="dtl-badge">2031 가을 졸업 · 초과학기 1개</span>
+          </div>
+          <div class="dtl-tl reveal">
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2026</div>
+              <div class="dtl-row-body">
+                <strong>입학 → 입대</strong>
+                <span>이중전공과 동일 · 일반화학 → h-STEM 전공기초 대체인정</span>
+                <span class="ms">★ h-STEM 전공기초 12/12 완성 · 누적 49학점</span>
+              </div>
+            </div>
+            <div class="dtl-row army">
+              <div class="dtl-row-yr">2027</div>
+              <div class="dtl-row-body">
+                <strong>군복무</strong>
+                <span>학점 동결</span>
+                <span>옵션 · 군 e-러닝 (9학점)</span>
+              </div>
+            </div>
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2028</div>
+              <div class="dtl-row-body">
+                <strong>복학 — 전공 기초</strong>
+                <span>자료구조·확률·이산구조·공학수학1 / <span class="add">+인공지능과스토리텔링(h-STEM)</span></span>
+                <span class="ms">★ 소융전공기초 15/15 완성 · 누적 73학점</span>
+              </div>
+            </div>
+            <div class="dtl-row">
+              <div class="dtl-row-yr">2029</div>
+              <div class="dtl-row-body">
+                <strong>제어 + h-STEM 전공선택</strong>
+                <span>알고리즘·회로·3D데이터·동역학·<span class="add">h-STEM융합개론</span> / 운영체제·DB·자동제어·시스템동역학·<span class="add">기후변화(h-STEM)</span></span>
+                <span class="ms">누적 112학점 · 정규학기 전부 18학점 만석</span>
+              </div>
+            </div>
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2030</div>
+              <div class="dtl-row-body">
+                <strong>캡스톤 + PBL</strong>
+                <span>영상분석·메카트로닉스·<span class="add">PBL프로젝트1(h-STEM)</span>·시스템시뮬레이션·응용물리</span>
+                <span>소융캡스톤·컴퓨터비전·로봇프로그래밍·로봇공학·첨단기계실험·기계캡스톤1</span>
+                <span class="ms">★ 소융 + 기계 캡스톤 완료 · 누적 148학점</span>
+              </div>
+            </div>
+            <div class="dtl-row">
+              <div class="dtl-row-yr">2031 봄</div>
+              <div class="dtl-row-body">
+                <strong>소융 졸업논문 + 기계캡스톤2</strong>
+                <span>소프트웨어공학·딥러닝·기계캡스톤2·<span class="add">소융졸업논문</span></span>
+                <span class="ms">소융 졸업논문 완료 · 기계캡스톤 전 완성</span>
+              </div>
+            </div>
+            <div class="dtl-row key">
+              <div class="dtl-row-yr">2031 가을</div>
+              <div class="dtl-row-body">
+                <strong>초과학기 — h-STEM + 기계 완료</strong>
+                <span><span class="add">PBL프로젝트2(h-STEM)</span> · 기계졸업논문</span>
+                <span class="ms">🎓 삼중전공 전 요건 충족 · 누적 약 164학점</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <footer class="slide-foot">
+        <span class="label muted">박성호 · 진로 설계</span>
+        <span class="label muted">학기별 타임라인</span>
+      </footer>
+    </section>
+
+    <!-- ═══ 07 · 전공 선택 분기 로드맵 ═══════════════════════════ -->
     <section class="slide dark slide--branch">
       <header class="slide-chrome">
         <span class="label muted">② 진로 계획 · Route Decision</span>
-        <span class="label muted">05</span>
+        <span class="label muted">07</span>
       </header>
       <div class="slide-body">
         <div class="branch-head">
           <span class="kicker reveal">선택의 기준</span>
-          <h2 class="h2 reveal">학점보다<br>연구할 시간.</h2>
+          <h2 class="h2 reveal">전공의 개수보다<br>연구의 깊이.</h2>
           <p class="lead muted reveal">삼중전공은 선택지로 남기되, 메인 루트는 소융+기계 이중전공과 학부연구생·대회·프로젝트를 함께 가져가는 방향.</p>
           <div class="info-card reveal" style="margin-top:10px;">
             <div class="info-card-heading">2029년에 다시 판단</div>
@@ -514,11 +761,11 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
       </footer>
     </section>
 
-    <!-- ═══ 06 · 2–4학년 학업 계획 (이중전공 로드맵 · 메인) ════════ -->
+    <!-- ═══ 08 · 2–4학년 학업 계획 (이중전공 로드맵 · 메인) ════════ -->
     <section class="slide dark slide--list">
       <header class="slide-chrome">
         <span class="label muted">③ 학업 계획 · 메인</span>
-        <span class="label muted">06</span>
+        <span class="label muted">08</span>
       </header>
       <div class="slide-body">
         <div class="list-head">
@@ -540,11 +787,11 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
       </footer>
     </section>
 
-    <!-- ═══ 07 · 2–4학년 학업 계획 (학부연구생·방학 활동) ════════ -->
+    <!-- ═══ 09 · 2–4학년 학업 계획 (학부연구생·방학 활동) ════════ -->
     <section class="slide dark slide--list">
       <header class="slide-chrome">
         <span class="label muted">③ 학업 계획 · 연구·활동</span>
-        <span class="label muted">07</span>
+        <span class="label muted">09</span>
       </header>
       <div class="slide-body">
         <div class="list-head">
@@ -570,11 +817,11 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
       </footer>
     </section>
 
-    <!-- ═══ 08 · 졸업 후 ① 대학원 진로 ═══════════════════════════ -->
+    <!-- ═══ 10 · 졸업 후 ① 대학원 진로 ═══════════════════════════ -->
     <section class="slide dark slide--compare">
       <header class="slide-chrome">
         <span class="label muted">④ 졸업 후 · 대학원</span>
-        <span class="label muted">08</span>
+        <span class="label muted">10</span>
       </header>
       <div class="slide-body">
         <div class="compare-panel left">
@@ -600,7 +847,7 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
       </footer>
     </section>
 
-    <!-- ═══ 09 · 졸업 후 ② 나의 모습 ═════════════════════════════ -->
+    <!-- ═══ 11 · 졸업 후 ② 나의 모습 ═════════════════════════════ -->
     <section class="slide dark slide--statement">
       <div class="slide-body">
         <div class="stmt-headline">
@@ -621,17 +868,18 @@ img,video,canvas,svg{ max-width:100%; max-height:100%; }
       </div>
     </section>
 
-    <!-- ═══ 10 · END ════════════════════════════════════════════ -->
+    <!-- ═══ 12 · END ════════════════════════════════════════════ -->
     <section class="slide dark slide--end">
+      <div class="marathon-photo">
+        <img src="photo/마라톤.jpg" alt="마라톤">
+      </div>
       <div class="end-main">
         <span class="kicker reveal">마치며</span>
         <h2 class="h1 reveal">지금 다 정하지<br>않아도 괜찮다.</h2>
         <p class="lead muted reveal" style="max-width:88%;">방향을 좁히기보다, 만들고 이어 가며 넓혀 가는 4년으로.</p>
-      </div>
-      <div class="end-side">
         <div class="info-card reveal">
           <div class="info-card-heading">박성호 · Park Seongho</div>
-          <div class="info-card-body">소프트웨어융합학과<br>Human-centered Embodied Robotics</div>
+          <div class="info-card-body">소프트웨어융합학과<br>Human-Robot Interaction (HRI) &amp; Embodied Robotics</div>
         </div>
       </div>
       <div class="end-foot">
